@@ -1,3 +1,127 @@
+@mixin form-validation-state($state, $color, $icon) {
+  .#{$state}-tooltip {
+    left: unset;
+    right: 0;
+    // Contain to parent when possible
+    padding: $form-feedback-tooltip-padding-y $form-feedback-tooltip-padding-x;
+
+    // See https://github.com/twbs/bootstrap/pull/31557
+    // Align tooltip to form elements
+    .form-row > .col > &,
+    .form-row > [class*="col-"] > & {
+      left: unset;
+      right: $form-grid-gutter-width / 2;
+    }
+  }
+
+  .form-control {
+    @include form-validation-state-selector($state) {
+      border-color: $color;
+
+      @if $enable-validation-icons {
+        padding-right: 0.75rem;
+        padding-left: $input-height-inner;
+        background-repeat: no-repeat;
+        background-position: left $input-height-inner-quarter center;
+        background-size: $input-height-inner-half $input-height-inner-half;
+      }
+
+      &:focus {
+        border-color: $color;
+        box-shadow: 0 0 0 $input-focus-width rgba($color, 0.25);
+      }
+    }
+  }
+
+  // stylelint-disable-next-line selector-no-qualifying-type
+  textarea.form-control {
+    @include form-validation-state-selector($state) {
+      @if $enable-validation-icons {
+        padding-right: $input-height-inner;
+        background-position: top $input-height-inner-quarter right $input-height-inner-quarter;
+      }
+    }
+  }
+
+  .custom-select {
+    @include form-validation-state-selector($state) {
+      border-color: $color;
+
+      @if $enable-validation-icons {
+        padding-right: $custom-select-feedback-icon-padding-right;
+        background: $custom-select-background,
+          $custom-select-bg
+            escape-svg($icon)
+            $custom-select-feedback-icon-position /
+            $custom-select-feedback-icon-size
+            no-repeat;
+      }
+
+      &:focus {
+        border-color: $color;
+        box-shadow: 0 0 0 $input-focus-width rgba($color, 0.25);
+      }
+    }
+  }
+
+  .form-check-input {
+    @include form-validation-state-selector($state) {
+      ~ .form-check-label {
+        color: $color;
+      }
+
+      ~ .#{$state}-feedback,
+      ~ .#{$state}-tooltip {
+        display: block;
+      }
+    }
+  }
+
+  .custom-control-input {
+    @include form-validation-state-selector($state) {
+      ~ .custom-control-label {
+        color: $color;
+
+        &::before {
+          border-color: $color;
+        }
+      }
+
+      &:checked {
+        ~ .custom-control-label::before {
+          border-color: lighten($color, 10%);
+          @include gradient-bg(lighten($color, 10%));
+        }
+      }
+
+      &:focus {
+        ~ .custom-control-label::before {
+          box-shadow: 0 0 0 $input-focus-width rgba($color, 0.25);
+        }
+
+        &:not(:checked) ~ .custom-control-label::before {
+          border-color: $color;
+        }
+      }
+    }
+  }
+
+  // custom file
+  .custom-file-input {
+    @include form-validation-state-selector($state) {
+      ~ .custom-file-label {
+        border-color: $color;
+      }
+
+      &:focus {
+        ~ .custom-file-label {
+          border-color: $color;
+          box-shadow: 0 0 0 $input-focus-width rgba($color, 0.25);
+        }
+      }
+    }
+  }
+}
 [dir="rtl"] {
   .offset-1 {
     margin-left: unset !important;
@@ -412,7 +536,7 @@
   }
 
   .custom-control {
-    padding-right: 1.5rem;
+    padding-right: 2.5rem;
     padding-left: inherit;
     margin-left: inherit;
   }
@@ -615,6 +739,9 @@
   .page-link {
     margin-left: inherit;
     margin-right: -1px;
+  }
+  @each $state, $data in $form-validation-states {
+    @include form-validation-state($state, map-get($data, color), map-get($data, icon));
   }
 }
 

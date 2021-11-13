@@ -50,6 +50,11 @@
 }
 
 // User Menu
+[dir="rtl"] .user-footer {
+  .float-right {
+    float: right !important;
+  }
+}
 [dir="rtl"] .navbar-nav > .user-menu {
   .user-image {
     @include media-breakpoint-up(sm) {

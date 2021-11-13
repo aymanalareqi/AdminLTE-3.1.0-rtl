@@ -820,21 +820,36 @@
 
     _proto.fixPosition = function fixPosition() {
       var $element = $__default['default'](SELECTOR_DROPDOWN_MENU_ACTIVE);
+      var html_tag_dir = $__default['default']("html").attr("dir");
 
       if ($element.length === 0) {
         return;
       }
 
       if ($element.hasClass(CLASS_NAME_DROPDOWN_RIGHT)) {
-        $element.css({
-          left: 'inherit',
-          right: 0
-        });
+        if (html_tag_dir == 'rtl') {
+          $element.css({
+            left: 0,
+            right: 'inherit'
+          });
+        } else {
+          $element.css({
+            left: 'inherit',
+            right: 0
+          });
+        }
       } else {
-        $element.css({
-          left: 0,
-          right: 'inherit'
-        });
+        if (html_tag_dir == 'rtl') {
+          $element.css({
+            left: 'inherit',
+            right: 0
+          });
+        } else {
+          $element.css({
+            left: 0,
+            right: 'inherit'
+          });
+        }
       }
 
       var offset = $element.offset();
